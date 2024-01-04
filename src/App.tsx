@@ -148,11 +148,11 @@ export default function App() {
   }
 
   return (
-    <div className="overflow-hidden flex-col flex items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
+    <div className="flex-col  items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
       <div className="flex flex-col lg:flex-row p-8">
         <h2 className="text-2xl font-extrabold">JSONFORMATTER</h2>
 
-        <div className="ml-auto mb-7 flex flex-wrap w-full  space-y-3 lg:space-x-2 sm:justify-end lg:m-0 mt-[20px]">
+        <div className="ml-auto mb-7 flex  w-full  space-y-3 lg:space-y-0 lg:space-x-2 sm:justify-end lg:mt-0 mt-[20px]">
           <ThemeSelect value={value} setValue={setValue} />
           <Button
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
@@ -222,13 +222,14 @@ export default function App() {
           overflow: "hidden",
           fontSize: '18px'
         }}
+        // className="h-screen"
         onChange={(val) => setJsonx(val)}
         autoCapitalize="false"
         spellCheck="false"
         autoFocus={true}
         theme={theme}
         extensions={[json(), lintGutter(), EditorView.lineWrapping]}
-        height="auto"
+      
       />
     </div>
   );
