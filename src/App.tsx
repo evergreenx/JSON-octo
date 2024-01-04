@@ -1,6 +1,6 @@
 import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
 import { json } from "@codemirror/lang-json";
-import {  useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { lintGutter } from "@codemirror/lint";
 import { ThemeSelect } from "./components/themeSelect";
 import { Button } from "./components/ui/button";
@@ -19,6 +19,7 @@ import { tomorrowNightBlue } from "@uiw/codemirror-theme-tomorrow-night-blue";
 import { copilot } from "@uiw/codemirror-theme-copilot";
 
 import React from "react";
+import { useToast } from "./components/ui/use-toast";
 
 export default function App() {
   const defaultJson = `
@@ -58,12 +59,15 @@ export default function App() {
         }
     ]
 }
+  
   `;
 
   const [value, setValue] = React.useState("");
   const [jsonx, setJsonx] = useState(defaultJson);
 
   const editor = useRef();
+
+  const { toast } = useToast();
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
@@ -81,13 +85,15 @@ export default function App() {
     theme: "dark",
   });
 
-
-
   const handleFormatClick = () => {
     try {
       const parsedJson = JSON.parse(jsonx);
       const formatted = JSON.stringify(parsedJson, null, 2);
       setJsonx(formatted);
+
+      toast({
+        title: "JSON has been format",
+      });
     } catch (error) {
       console.error("Invalid JSON:", error);
       setJsonx("Invalid JSON");
@@ -99,6 +105,10 @@ export default function App() {
       const parsedJson = JSON.parse(jsonx);
       const minified = JSON.stringify(parsedJson);
       setJsonx(minified);
+
+      toast({
+        title: "JSON has been minified",
+      });
     } catch (error) {
       // Handle JSON parsing error
       console.error("Invalid JSON:", error);
@@ -220,7 +230,7 @@ export default function App() {
 
         style={{
           overflow: "hidden",
-          fontSize: '18px'
+          fontSize: "18px",
         }}
         // className="h-screen"
         onChange={(val) => setJsonx(val)}
@@ -229,7 +239,6 @@ export default function App() {
         autoFocus={true}
         theme={theme}
         extensions={[json(), lintGutter(), EditorView.lineWrapping]}
-      
       />
     </div>
   );
