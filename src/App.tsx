@@ -1,7 +1,7 @@
 import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
-import { json } from "@codemirror/lang-json";
+import { json, jsonParseLinter } from "@codemirror/lang-json";
 import { useEffect, useRef, useState } from "react";
-import { lintGutter } from "@codemirror/lint";
+import { lintGutter, linter } from "@codemirror/lint";
 import { ThemeSelect } from "./components/themeSelect";
 import { Button } from "./components/ui/button";
 import { PresetActions } from "./components/presetActions";
@@ -20,6 +20,7 @@ import { copilot } from "@uiw/codemirror-theme-copilot";
 
 import React from "react";
 import { useToast } from "./components/ui/use-toast";
+import { LoadData } from "./components/loadData";
 
 export default function App() {
   const defaultJson = `
@@ -157,6 +158,8 @@ export default function App() {
       break;
   }
 
+
+
   return (
     <div className="flex-col  items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
       <div className="flex flex-col item lg:flex-row p-8">
@@ -164,6 +167,8 @@ export default function App() {
 
         <div className="ml-auto mb-7 flex flex-wrap items-center  w-full  lg:space-y-0 lg:space-x-2 sm:justify-end lg:mt-0 mt-[20px]">
           <ThemeSelect value={value} setValue={setValue} />
+
+ 
           <Button
             className="inline-flex items-center lg:mt-0  justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
             type="button"
@@ -178,16 +183,11 @@ export default function App() {
             Minify
           </Button>
           <div className=" space-x-2 md:flex ">
-            {/* <Button
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
-              type="button"
-              aria-haspopup="dialog"
-              aria-expanded="false"
-              aria-controls="radix-:r3v:"
-              data-state="closed"
-            >
-              View code
-            </Button> */}
+          
+
+            <LoadData 
+            jsonx={jsonx}
+            setJsonx={setJsonx} />
             <Button
               className="inline-flex lg:mt-0 mt-[10px] items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
@@ -238,7 +238,7 @@ export default function App() {
         spellCheck="false"
         autoFocus={true}
         theme={theme}
-        extensions={[json(), lintGutter(), EditorView.lineWrapping]}
+        extensions={[json(), lintGutter(), EditorView.lineWrapping , linter(jsonParseLinter())]}
       />
     </div>
   );
