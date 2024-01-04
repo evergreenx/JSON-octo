@@ -6,6 +6,9 @@ import path from "path"
  
 export default defineConfig({
   plugins: [react()],
+  optimizeDeps: {
+    exclude: ['js-big-decimal']
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

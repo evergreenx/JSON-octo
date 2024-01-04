@@ -1,11 +1,24 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { json, jsonLanguage } from "@codemirror/lang-json";
-import { okaidia } from "@uiw/codemirror-theme-okaidia";
-import { useState } from "react";
+import CodeMirror, { useCodeMirror } from "@uiw/react-codemirror";
+import { json } from "@codemirror/lang-json";
+import {  useEffect, useRef, useState } from "react";
 import { lintGutter } from "@codemirror/lint";
 import { ThemeSelect } from "./components/themeSelect";
 import { Button } from "./components/ui/button";
 import { PresetActions } from "./components/presetActions";
+import { EditorView } from "@codemirror/view";
+import { aura } from "@uiw/codemirror-theme-aura";
+
+import { okaidia } from "@uiw/codemirror-theme-okaidia";
+
+import { githubLight, githubDark } from "@uiw/codemirror-theme-github";
+
+import { tomorrowNightBlue } from "@uiw/codemirror-theme-tomorrow-night-blue";
+
+// import { copilot } from '@uiw/codemirror-theme-copilot';
+
+import { copilot } from "@uiw/codemirror-theme-copilot";
+
+import React from "react";
 
 export default function App() {
   const defaultJson = `
@@ -47,16 +60,28 @@ export default function App() {
 }
   `;
 
+  const [value, setValue] = React.useState("");
   const [jsonx, setJsonx] = useState(defaultJson);
 
-  // const handleMinifyClick = () => {
-  //   try {
-  //     const minifiedJSON = JSON.stringify(jsonx).replace(/\s/g, "");
-  //     setJsonx(minifiedJSON);
-  //   } catch (error) {
-  //     console.error("Error minifying JSON:", error);
-  //   }
-  // };
+  const editor = useRef();
+
+  const { setContainer } = useCodeMirror({
+    container: editor.current,
+
+    basicSetup: {
+      lineNumbers: false,
+      highlightActiveLine: false,
+      highlightActiveLineGutter: false,
+      foldGutter: false,
+    },
+    value: value,
+    width: "auto",
+
+    height: "auto",
+    theme: "dark",
+  });
+
+
 
   const handleFormatClick = () => {
     try {
@@ -81,13 +106,54 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    if (editor.current) {
+      setContainer(editor.current);
+    }
+  }, [editor.current, setContainer, value]);
+
+  let theme = copilot;
+  switch (value) {
+    case "copilot":
+      theme = copilot;
+
+      break;
+
+    case "aura":
+      theme = aura;
+      break;
+
+    case "tomorrownightblue":
+      theme = tomorrowNightBlue;
+
+      break;
+
+    case "okaidia":
+      theme = okaidia;
+      // Add other cases for different language modes as needed
+      break;
+
+    case "githubdark":
+      theme = githubDark;
+
+      break;
+
+    case "githublight":
+      theme = githubLight;
+      break;
+    default:
+      theme = copilot;
+
+      break;
+  }
+
   return (
-    <div className="overflow-hidden flex-col flex items-centerrounded-[0.5rem] border bg-background shadow-md md:shadow-xl py-20">
-      <div className="flex p-3">
+    <div className="overflow-hidden flex-col flex items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
+      <div className="flex flex-col lg:flex-row p-8">
         <h2 className="text-2xl font-extrabold">JSONFORMATTER</h2>
 
-        <div className="ml-auto mb-7 flex w-full space-x-2 sm:justify-end">
-          <ThemeSelect />
+        <div className="ml-auto mb-7 flex flex-wrap w-full  space-y-3 lg:space-x-2 sm:justify-end lg:m-0 mt-[20px]">
+          <ThemeSelect value={value} setValue={setValue} />
           <Button
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
             type="button"
@@ -101,8 +167,8 @@ export default function App() {
           >
             Minify
           </Button>
-          <div className="hidden space-x-2 md:flex">
-            <Button
+          <div className=" space-x-2 md:flex">
+            {/* <Button
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
               aria-haspopup="dialog"
@@ -111,7 +177,7 @@ export default function App() {
               data-state="closed"
             >
               View code
-            </Button>
+            </Button> */}
             <Button
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
@@ -124,7 +190,7 @@ export default function App() {
               Format
             </Button>
 
-            <Button
+            {/* <Button
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
               aria-haspopup="dialog"
@@ -133,7 +199,7 @@ export default function App() {
               data-state="closed"
             >
               Share
-            </Button>
+            </Button> */}
           </div>
           <Button
             className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
@@ -152,18 +218,17 @@ export default function App() {
         value={jsonx}
         // height="200px"
 
-
         style={{
-          overflow : 'hidden'
+          overflow: "hidden",
+          fontSize: '18px'
         }}
-
         onChange={(val) => setJsonx(val)}
         autoCapitalize="false"
         spellCheck="false"
         autoFocus={true}
-        theme={"dark"}
-        extensions={[json(), lintGutter()]}
-        height="500px"
+        theme={theme}
+        extensions={[json(), lintGutter(), EditorView.lineWrapping]}
+        height="auto"
       />
     </div>
   );
