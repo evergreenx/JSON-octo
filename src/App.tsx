@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { lintGutter, linter } from "@codemirror/lint";
 import { ThemeSelect } from "./components/themeSelect";
 import { Button } from "./components/ui/button";
-import { PresetActions } from "./components/presetActions";
+// import { PresetActions } from "./components/presetActions";
 import { EditorView } from "@codemirror/view";
 import { aura } from "@uiw/codemirror-theme-aura";
 
@@ -93,7 +93,7 @@ export default function App() {
       setJsonx(formatted);
 
       toast({
-        title: "JSON has been format",
+        description: "JSON has been format",
       });
     } catch (error) {
       console.error("Invalid JSON:", error);
@@ -108,7 +108,7 @@ export default function App() {
       setJsonx(minified);
 
       toast({
-        title: "JSON has been minified",
+        description: "JSON has been minified",
       });
     } catch (error) {
       // Handle JSON parsing error
@@ -121,7 +121,7 @@ export default function App() {
     if (editor.current) {
       setContainer(editor.current);
     }
-  }, [editor.current, setContainer, value]);
+  }, [ setContainer, value]);
 
   let theme = copilot;
   switch (value) {
@@ -158,7 +158,21 @@ export default function App() {
       break;
   }
 
+  const handleExport = () => {
+    const data = jsonx; // Stringify JSON with formatting
+    const blob = new Blob([data], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "formattedJSON.json");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
+    toast({
+      description: "json downloaded ",
+    });
+  };
 
   return (
     <div className="flex-col  items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
@@ -168,7 +182,6 @@ export default function App() {
         <div className="ml-auto mb-7 flex flex-wrap items-center  w-full  lg:space-y-0 lg:space-x-2 sm:justify-end lg:mt-0 mt-[20px]">
           <ThemeSelect value={value} setValue={setValue} />
 
- 
           <Button
             className="inline-flex items-center lg:mt-0  justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
             type="button"
@@ -183,11 +196,7 @@ export default function App() {
             Minify
           </Button>
           <div className=" space-x-2 md:flex ">
-          
-
-            <LoadData 
-        
-            setJsonx={setJsonx} />
+            <LoadData setJsonx={setJsonx} />
             <Button
               className="inline-flex lg:mt-0 mt-[10px] items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
@@ -200,7 +209,8 @@ export default function App() {
               Format
             </Button>
 
-            {/* <Button
+            <Button
+              onClick={handleExport}
               className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
               type="button"
               aria-haspopup="dialog"
@@ -208,8 +218,8 @@ export default function App() {
               aria-controls="radix-:r42:"
               data-state="closed"
             >
-              Share
-            </Button> */}
+              Download
+            </Button>
           </div>
           <Button
             className="inline-flex lg:mt-0 mt-[10px] items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
@@ -219,7 +229,7 @@ export default function App() {
             aria-expanded="false"
             data-state="closed"
           >
-            <PresetActions />
+            {/* <PresetActions /> */}
           </Button>
         </div>
       </div>
@@ -238,7 +248,12 @@ export default function App() {
         spellCheck="false"
         autoFocus={true}
         theme={theme}
-        extensions={[json(), lintGutter(), EditorView.lineWrapping , linter(jsonParseLinter())]}
+        extensions={[
+          json(),
+          lintGutter(),
+          EditorView.lineWrapping,
+          linter(jsonParseLinter()),
+        ]}
       />
     </div>
   );

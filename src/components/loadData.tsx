@@ -10,7 +10,6 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,20 +30,22 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useRef } from "react";
 
-export function LoadData({ setJsonx } : {
+import { Input } from "@/components/ui/input";
+import { Label } from "./ui/label";
 
-    setJsonx: React.Dispatch<React.SetStateAction<string>>
-
+export function LoadData({
+  setJsonx,
+}: {
+  setJsonx: React.Dispatch<React.SetStateAction<string>>;
 }) {
   const [open, setIsOpen] = React.useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e:React.ChangeEvent<HTMLInputElement>) => {
-
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     //ts-ignore
-    const file =  e.target.files &&  e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (file) {
       try {
         const fileContent = await file.text();
@@ -54,24 +55,41 @@ export function LoadData({ setJsonx } : {
         setIsOpen(false);
 
         toast({
-          title: ` ${file.name.slice(0 ,15)} loaded`,
+          description: ` ${file.name.slice(0, 15)} loaded`,
         });
       } catch (error) {
         toast({
-          title: "Error parsing JSON file:",
+          description: "Error parsing JSON file:",
         });
       }
     }
   };
 
   const handleButtonClick = () => {
-    // ts-ignore
-
-    if(fileInputRef.current){
-        fileInputRef.current.click();
-
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
+
+  const handleUrlFetch = async () => {
+    // Replace with the URL from where you want to fetch JSON data
+    try {
+      const response = await fetch(url);
+      const jsonData = await response.json();
+
+
+      setJsonx(JSON.stringify(jsonData , null , 2));
+    } catch (error) {
+      console.error("Error fetching JSON from URL:", error);
+    } finally {
+      setShowDeleteDialog(false);
+      toast({
+        description: "data loaded from URL",
+      });
+    }
+  };
+
+  const [url, setUrl] = React.useState("");
 
   return (
     <>
@@ -134,10 +152,17 @@ export function LoadData({ setJsonx } : {
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This preset will no longer be
-              accessible by you or others you&apos;ve shared it with.
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="url">URL</Label>
+                <Input
+                  value={url}
+                  type="url"
+                  id="url"
+                  placeholder="URL"
+                  onChange={(e) => setUrl(e.target.value)}
+                />
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -145,13 +170,10 @@ export function LoadData({ setJsonx } : {
             <Button
               variant="destructive"
               onClick={() => {
-                setShowDeleteDialog(false);
-                toast({
-                  description: "This preset has been deleted.",
-                });
+                handleUrlFetch();
               }}
             >
-              Delete
+              Load
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
