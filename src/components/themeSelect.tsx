@@ -39,7 +39,9 @@ export function ThemeSelect({
   console.log(value);
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover
+    
+    open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
@@ -49,7 +51,7 @@ export function ThemeSelect({
         >
           {value
             ? themes.find((theme) => theme.value.toLowerCase() === value)?.value
-            : "Select theme..."}
+            : "Copilot"}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>

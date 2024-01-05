@@ -31,14 +31,20 @@ import {
 import { toast } from "@/components/ui/use-toast";
 import { useRef } from "react";
 
-export function LoadData({ setJsonx }) {
+export function LoadData({ setJsonx } : {
+
+    setJsonx: React.Dispatch<React.SetStateAction<string>>
+
+}) {
   const [open, setIsOpen] = React.useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
-  const fileInputRef : null= useRef(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files[0];
+  const handleFileChange = async (e:React.ChangeEvent<HTMLInputElement>) => {
+
+    //ts-ignore
+    const file =  e.target.files &&  e.target.files[0];
     if (file) {
       try {
         const fileContent = await file.text();
@@ -48,7 +54,7 @@ export function LoadData({ setJsonx }) {
         setIsOpen(false);
 
         toast({
-          title: ` ${file.name} JSON loaded`,
+          title: ` ${file.name.slice(0 ,15)} loaded`,
         });
       } catch (error) {
         toast({
@@ -61,7 +67,7 @@ export function LoadData({ setJsonx }) {
   const handleButtonClick = () => {
     // ts-ignore
 
-    if(fileInputRef){
+    if(fileInputRef.current){
         fileInputRef.current.click();
 
     }
@@ -98,7 +104,7 @@ export function LoadData({ setJsonx }) {
       <Dialog open={open} onOpenChange={setIsOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Content filter preferences</DialogTitle>
+            <DialogTitle>Upload </DialogTitle>
             <DialogDescription></DialogDescription>
           </DialogHeader>
           <div className="py-6">

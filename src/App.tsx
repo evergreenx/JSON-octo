@@ -186,7 +186,7 @@ export default function App() {
           
 
             <LoadData 
-            jsonx={jsonx}
+        
             setJsonx={setJsonx} />
             <Button
               className="inline-flex lg:mt-0 mt-[10px] items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
