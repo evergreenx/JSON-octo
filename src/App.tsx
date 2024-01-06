@@ -175,7 +175,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex-col  items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
+    <div className="flex-col  items-center rounded-[0.5rem] border bg-background h-screen ">
       <div className="flex flex-col item lg:flex-row p-8">
         <h2 className="text-2xl font-extrabold">JSONFORMATTERX</h2>
 
