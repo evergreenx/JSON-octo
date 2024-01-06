@@ -141,7 +141,7 @@ export default function App() {
 
     case "okaidia":
       theme = okaidia;
-      // Add other cases for different language modes as needed
+
       break;
 
     case "githubdark":
@@ -177,7 +177,7 @@ export default function App() {
   return (
     <div className="flex-col  items-center rounded-[0.5rem] border bg-background shadow-md md:shadow-xl ">
       <div className="flex flex-col item lg:flex-row p-8">
-        <h2 className="text-2xl font-extrabold">JSONFORMATTER</h2>
+        <h2 className="text-2xl font-extrabold">JSONFORMATTERX</h2>
 
         <div className="ml-auto mb-7 flex flex-wrap items-center  w-full  lg:space-y-0 lg:space-x-2 sm:justify-end lg:mt-0 mt-[20px]">
           <ThemeSelect value={value} setValue={setValue} />
@@ -221,7 +221,7 @@ export default function App() {
               Download
             </Button>
           </div>
-          <Button
+          {/* <Button
             className="inline-flex lg:mt-0 mt-[10px] items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80 h-9 px-4 py-2"
             type="button"
             id="radix-:r43:"
@@ -229,8 +229,8 @@ export default function App() {
             aria-expanded="false"
             data-state="closed"
           >
-            {/* <PresetActions /> */}
-          </Button>
+            <PresetActions />
+          </Button> */}
         </div>
       </div>
 
@@ -255,6 +255,13 @@ export default function App() {
           linter(jsonParseLinter()),
         ]}
       />
+
+
+      <p className="text-sm text-center py-5">
+
+created with ❤️ by <a href="https://github.com/evergreenx">ido evergreen</a>
+
+      </p>
     </div>
   );
 }

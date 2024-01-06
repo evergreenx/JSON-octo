@@ -35,6 +35,7 @@
     "cmdk": "^0.2.0",
     "install": "^0.13.0",
     "json-minify": "^1.0.0",
+    "json-to-pretty-yaml": "^1.2.2",
     "lucide-react": "^0.303.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
